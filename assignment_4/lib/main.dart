@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'GeoMap.dart';
 import 'models/users.dart';
 import 'models/user.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 
@@ -16,7 +19,7 @@ class MyApp extends StatelessWidget {
 			title: 'Flutter Demo',
 			debugShowCheckedModeBanner: false,
 			theme: new ThemeData(
-				primarySwatch: Colors.cyan,
+				primarySwatch: Colors.amber,
 			),
 			home: new MyHomePage(title: 'Users'),
 		);
@@ -88,31 +91,38 @@ class _MyHomePageState extends State<MyHomePage> {
 	Widget row(int index) {
 		return Card(
 			child: Padding(
-				padding: EdgeInsets.all(10.0),
-				child: Column(
-					mainAxisAlignment: MainAxisAlignment.start,
-					crossAxisAlignment: CrossAxisAlignment.start,
-					children: <Widget>[
-						Text(
-							users.users[index].name,
-							style: TextStyle(
-								fontSize: 16.0,
-								color: Colors.black,
-							),
+				padding: EdgeInsets.all(5.0),
+				child: ListTile(
+					leading: Icon(Icons.sentiment_very_satisfied,
+						color: Colors.greenAccent,
+					),
+					title: Text(
+						users.users[index].name,
+						style: TextStyle(
+							fontSize: 16.0,
+							color: Colors.black,
 						),
-						SizedBox(
-							height: 5.0,                      // 23.810331, 90.412521
+					),
+					subtitle: Text(
+						users.users[index].location == null ? "Latitude = 23.810331, Longitude = 90.412521" :
+						"Latitude= ${users.users[index].location.latitude.toString()}, "
+								"Longitude= ${users.users[index].location.longitude.toString()}",
+						style: TextStyle(
+							fontSize: 12.0,
+							color: Colors.grey,
 						),
-						Text(
-							users.users[index].location == null ? "Latitude = 23.810331, Longitude = 90.412521" :
-							"Latitude= ${users.users[index].location.latitude.toString()}, "
-							"Longitude= ${users.users[index].location.longitude.toString()}",
-							style: TextStyle(
-								fontSize: 14.0,
-								color: Colors.grey,
-							),
-						),
-					],
+					),
+					onTap: (){
+						var user_info = new List();
+						user_info.add(users.users[index].name);
+						user_info.add(users.users[index].location.latitude.toString());
+						user_info.add(users.users[index].location.longitude.toString());
+
+						Navigator.push(context, MaterialPageRoute(builder: (context ){
+							return MapsDemo(value: user_info);
+						})
+						);
+					},
 				),
 			),
 		);
@@ -138,106 +148,4 @@ class _MyHomePageState extends State<MyHomePage> {
 			),
 		);
 	}
-  }
-
-//	@override
-//	Widget build(BuildContext context) {
-//		return new Scaffold(
-//			appBar: new AppBar(
-//				title: new Text("Fetching JSON data"),
-//				backgroundColor: Colors.amber,
-//			),
-//			body: Container(
-//				child: FutureBuilder(
-//					future: _getUsers(),
-//					builder: (BuildContext context, AsyncSnapshot snapshot){
-//						print(snapshot.data);
-//						if(_posts.length == null){
-//							return Container(
-//									child: Center(
-//											child: Text("Loading...")
-//									)
-//							);
-//						} else {
-//							return ListView.builder(
-//								itemCount: _posts.length,
-//								itemBuilder: (BuildContext context, int index) {
-//									return ListTile(
-//										leading: Icon(
-//											Icons.sentiment_very_satisfied,
-//											color: Colors.green,
-//										),
-//										title: Text(_posts[index].name),
-////										subtitle: Text(snapshot.data[index].email),
-//									);
-//								},
-//							);
-//						}
-//					},
-//				),
-//			),
-//		);
-//	}
-//}
-
-//class DetailPage extends StatelessWidget {
-//
-//	final User user;
-//
-//	DetailPage(this.user);
-//
-//	@override
-//	Widget build(BuildContext context) {
-//		return Scaffold(
-//				appBar: AppBar(
-//					title: Text(user.name),
-//				)
-//		);
-//	}
-//}
-//
-//
-//class User {
-//
-//	final String name;
-//	final String location;
-//
-//	User(this.name, this.location);
-//
-//}
-
-
-
-//Widget build(BuildContext context) {
-//	return new Scaffold(
-//		appBar: new AppBar(
-//			title: new Text(widget.title),
-//			backgroundColor: Colors.amber,
-//		),
-//		body: new ListView.builder(
-//				padding: EdgeInsets.all(8.0),
-//				itemCount: jsonData.length==null?0:jsonData.length,
-//				itemBuilder: (BuildContext context, int index){
-//					if (jsonData.length == null || jsonData.length ==0){
-//						return Container(
-//							child: Center(
-//								child: Text("Loding..."),
-//							),
-//						);
-//					}
-//					else{
-//						return ListTile(
-//							leading: Icon(
-//								Icons.sentiment_very_satisfied,
-//								color: Colors.green,
-//							),
-//							title: Text(jsonData[index]["name"]),
-////							subtitle: Text(jsonData[index]["location"]),
-//							onTap: (){
-//							},
-//						);
-//					}
-//				}
-//		),
-//	);
-//}
+}
