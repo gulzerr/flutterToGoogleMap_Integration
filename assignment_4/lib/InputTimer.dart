@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
+//import 'package:toast/toast.dart';
+import 'package:fluttertoast/flutter'
+    'toast.dart';
 
 class InputTimer extends StatefulWidget {
   String value;
@@ -19,9 +21,9 @@ class InputTimerState extends State<InputTimer> {
 
   var _textController = new TextEditingController();
 
-  void showToast(String msg, {int duration, int gravity}) {
-    Toast.show(msg, context, duration: duration, gravity: gravity);
-  }
+//  void showToast(String msg, {int duration, int gravity}) {
+//    Toast.show(msg, context, duration: duration, gravity: gravity);
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +48,20 @@ class InputTimerState extends State<InputTimer> {
               child: Text('Submit'),
               onPressed: () {
                 int time = int.parse(_textController.text);
+                print(time);
                 Timer(Duration(seconds: time), (){
-                  showToast("Rased toast after ${_textController.text} Seconds", gravity: Toast.BOTTOM);
+                  Fluttertoast.showToast(
+                      msg: "Raised toast after ${_textController.text} Seconds",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+//                      timeInSecForIos: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0
+                  );
+//                  showToast("Rased toast after ${_textController.text} Seconds",
+//                      gravity: Toast.BOTTOM,
+//                  );
                 }
                 );
               },
